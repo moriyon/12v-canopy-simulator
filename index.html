@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>4WD 12V Canopy Electrical Simulator</title>
+  <title>4WD 12V Canopy Electrical Simulator & Budget</title>
   <style>
     :root {
       --bg-color: #121212;
@@ -14,6 +14,7 @@
       --danger: #f44336;
       --warning: #ffb74d;
       --success: #4caf50;
+      --info: #2196f3;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -67,6 +68,7 @@
     }
     .metric-card.danger { border-left-color: var(--danger); }
     .metric-card.success { border-left-color: var(--success); }
+    .metric-card.info { border-left-color: var(--info); }
     .metric-title { font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 5px; }
     .metric-value { font-size: 1.3rem; font-weight: bold; color: #fff; }
 
@@ -74,16 +76,28 @@
     .alert.danger { background: #3b1414; color: #ff8a80; border: 1px solid #7f1d1d; }
     .alert.warning { background: #38280e; color: #ffd54f; border: 1px solid #7c5208; }
     .alert.success { background: #132e18; color: #81c784; border: 1px solid #1b5e20; }
+
+    /* Shopping List Styles */
+    .shopping-list { list-style: none; padding: 0; margin: 0; }
+    .shopping-item { 
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid #333; font-size: 0.9rem;
+    }
+    .shopping-item:last-child { border-bottom: none; }
+    .shopping-link { color: var(--info); text-decoration: none; }
+    .shopping-link:hover { text-decoration: underline; }
+    .shopping-price { font-weight: bold; color: #fff; }
   </style>
 </head>
 <body>
 
   <div class="header">
     <h1>⚡ 4WD Canopy 12V System Simulator</h1>
-    <p>Test real components from Adventure Kings, KickAss, and Anaconda to verify battery compatibility, BMS limits, and daily power balance.</p>
+    <p>Test real components, balance your power, and generate a live budget shopping list.</p>
   </div>
 
   <div class="grid">
+    <!-- CONTROLS COLUMN -->
     <div class="controls-col">
       <div class="card">
         <h3>1. Power Storage & Charging</h3>
@@ -115,6 +129,7 @@
       </div>
     </div>
 
+    <!-- RESULTS COLUMN -->
     <div class="results-col">
       <div class="card">
         <h2>System Diagnostics & Balance</h2>
@@ -124,44 +139,69 @@
           <div class="metric-card" id="cardBal"><div class="metric-title">Net Daily Balance</div><div class="metric-value" id="valBal">0 Ah</div></div>
           <div class="metric-card" id="cardPeak"><div class="metric-title">Peak Instant Draw</div><div class="metric-value" id="valPeak">0 A</div></div>
         </div>
-
-        <h3>Safety Checks & Warnings</h3>
         <div id="alertsContainer"></div>
+      </div>
+
+      <div class="card">
+        <h2>Shopping List & Budget</h2>
+        <ul class="shopping-list" id="shoppingList">
+          <!-- Populated by JS -->
+        </ul>
+        <div class="metric-card info" style="margin-top: 15px;">
+          <div class="metric-title">Estimated Setup Cost (Hardware Only)</div>
+          <div class="metric-value" id="valTotalCost">$0.00</div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+    const KINGS_URL = "https://www.4wdsupacentre.com.au/products/12v-power";
+    const KICKASS_URL = "https://kickassproducts.com.au/collections";
+    const ANACONDA_URL = "https://www.anacondastores.com/camping-tents/power-cooling";
+
     const PRODUCTS = {
       batteries: {
-        "kings_100ah_lithium": { name: "Kings 100Ah Lithium (100A BMS)", capacity: 100, bms: 100, chemistry: "LiFePO4" },
-        "kickass_120ah_lithium": { name: "KickAss 120Ah Smart Lithium (120A BMS)", capacity: 120, bms: 120, chemistry: "LiFePO4" },
-        "kickass_200ah_lithium": { name: "KickAss 200Ah Smart Lithium (200A BMS)", capacity: 200, bms: 200, chemistry: "LiFePO4" },
-        "dune_100ah_agm": { name: "Dune 4WD 100Ah AGM (Anaconda)", capacity: 100, bms: 80, chemistry: "AGM" }
+        "kings_100ah_lithium": { name: "Kings 100Ah Lithium", capacity: 100, bms: 100, chemistry: "LiFePO4", price: 399, url: `${KINGS_URL}/batteries` },
+        "kings_120ah_lithium": { name: "Kings 120Ah Deep Cycle Lithium", capacity: 120, bms: 100, chemistry: "LiFePO4", price: 499, url: `${KINGS_URL}/batteries` },
+        "kings_200ah_lithium": { name: "Kings 200Ah Deep Cycle Lithium", capacity: 200, bms: 150, chemistry: "LiFePO4", price: 799, url: `${KINGS_URL}/batteries` },
+        "kickass_105ah_slim": { name: "KickAss 105Ah Slimline Lithium", capacity: 105, bms: 100, chemistry: "LiFePO4", price: 649, url: `${KICKASS_URL}/lithium-batteries` },
+        "kickass_120ah_lithium": { name: "KickAss 120Ah Smart Lithium", capacity: 120, bms: 120, chemistry: "LiFePO4", price: 599, url: `${KICKASS_URL}/lithium-batteries` },
+        "kickass_200ah_lithium": { name: "KickAss 200Ah Smart Lithium", capacity: 200, bms: 200, chemistry: "LiFePO4", price: 1099, url: `${KICKASS_URL}/lithium-batteries` },
+        "kickass_230ah_ultra": { name: "KickAss 230Ah Ultra-X Slimline", capacity: 230, bms: 200, chemistry: "LiFePO4", price: 1399, url: `${KICKASS_URL}/lithium-batteries` },
+        "dune_100ah_agm": { name: "Dune 4WD 100Ah AGM (Anaconda)", capacity: 100, bms: 80, chemistry: "AGM", price: 199, url: `${ANACONDA_URL}/batteries` }
       },
       chargers: {
-        "none": { name: "None / Solar Only", amps: 0 },
-        "kings_25a": { name: "Kings 25A DCDC Charger", amps: 25 },
-        "kickass_40a": { name: "KickAss 40A Smart DCDC Charger", amps: 40 }
+        "none": { name: "None / Solar Only", amps: 0, price: 0, url: "#" },
+        "kings_25a": { name: "Kings 25A DCDC Charger", amps: 25, price: 262, url: `${KINGS_URL}/battery-chargers` },
+        "kings_40a": { name: "Kings 40A DCDC Charger", amps: 40, price: 288, url: `${KINGS_URL}/battery-chargers` },
+        "kickass_25a": { name: "KickAss 25A Smart DCDC", amps: 25, price: 149, url: `${KICKASS_URL}/dc-dc-chargers` },
+        "kickass_40a": { name: "KickAss 40A Smart DCDC", amps: 40, price: 249, url: `${KICKASS_URL}/dc-dc-chargers` },
+        "kickass_50a_flex": { name: "KickAss 50A Flexicharge", amps: 50, price: 349, url: `${KICKASS_URL}/dc-dc-chargers` }
       },
       solar: {
-        "none": { name: "None", watts: 0 },
-        "kings_200w": { name: "Kings 200W Fixed Panel", watts: 200 },
-        "kings_300w": { name: "Kings 300W Tri-Fold Blanket", watts: 300 },
-        "kickass_350w": { name: "KickAss 350W Fixed Panel", watts: 350 }
+        "none": { name: "None", watts: 0, price: 0, url: "#" },
+        "kings_200w_fixed": { name: "Kings 200W Fixed Panel", watts: 200, price: 86, url: `${KINGS_URL}/solar` },
+        "kings_300w_fold": { name: "Kings 300W Tri-Fold Blanket", watts: 300, price: 219, url: `${KINGS_URL}/solar` },
+        "kickass_200w_fold": { name: "KickAss 200W Portable Blanket", watts: 200, price: 250, url: `${KICKASS_URL}/solar-panels` },
+        "kickass_350w_fixed": { name: "KickAss 350W Fixed Panel", watts: 350, price: 299, url: `${KICKASS_URL}/solar-panels` }
       },
       inverters: {
-        "none": { name: "None (12V DC Only)", watts: 0 },
-        "kings_1500w": { name: "Kings 1500W Pure Sine Wave", watts: 1500 },
-        "kickass_2000w": { name: "KickAss 2000W Pure Sine Wave", watts: 2000 },
-        "kickass_3000w": { name: "KickAss 3000W Pure Sine Wave", watts: 3000 }
+        "none": { name: "None (12V DC Only)", watts: 0, price: 0, url: "#" },
+        "kings_1500w": { name: "Kings 1500W Pure Sine Wave", watts: 1500, price: 150, url: `${KINGS_URL}/inverters` },
+        "kickass_2000w": { name: "KickAss 2000W Pure Sine Wave", watts: 2000, price: 429, url: `${KICKASS_URL}/inverters` },
+        "kickass_3000w": { name: "KickAss 3000W Pure Sine Wave", watts: 3000, price: 699, url: `${KICKASS_URL}/inverters` }
       },
       loads: {
-        "kings_60l_fridge": { name: "Kings 60L Stayzcool Fridge (36Ah/day)", dailyAh: 36, instantAmps: 3.8 },
-        "dometic_cfx3_75": { name: "Dometic CFX3 75DZ Fridge (42Ah/day)", dailyAh: 42, instantAmps: 4.5 },
-        "starlink_mini": { name: "Starlink Mini 12V (70Ah/day)", dailyAh: 70, instantAmps: 2.9 },
-        "travel_buddy": { name: "Travel Buddy 12V Oven (10Ah/hr use)", dailyAh: 10, instantAmps: 10.0 },
-        "induction_240v": { name: "240V Induction Cooktop via Inverter (160Ah/hr)", dailyAh: 160, instantAmps: 177.0, requiresInverter: true }
+        "kings_escape_30": { name: "Kings Escape 30L Fridge", dailyAh: 25, instantAmps: 3.5, price: 199, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
+        "kings_escape_40": { name: "Kings Escape 40L Fridge", dailyAh: 30, instantAmps: 3.8, price: 249, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
+        "kings_stayzcool_60": { name: "Kings 60L Stayzcool Fridge", dailyAh: 36, instantAmps: 3.8, price: 349, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
+        "dometic_cfx3_35": { name: "Dometic CFX3 35L Fridge", dailyAh: 29, instantAmps: 3.5, price: 1099, url: `${ANACONDA_URL}/fridges-coolers` },
+        "dometic_cfx3_75": { name: "Dometic CFX3 75DZ Dual Zone", dailyAh: 42, instantAmps: 4.5, price: 1699, url: `${ANACONDA_URL}/fridges-coolers` },
+        "starlink_mini": { name: "Starlink Mini (12V Converted)", dailyAh: 70, instantAmps: 2.9, price: 599, url: "https://www.starlink.com/roam" },
+        "travel_buddy": { name: "Travel Buddy 12V Oven", dailyAh: 10, instantAmps: 10.0, price: 300, url: `${KICKASS_URL}/12v-travel-ovens` },
+        "camp_lighting": { name: "Camp LED Lighting", dailyAh: 8, instantAmps: 2.0, price: 50, url: `${KINGS_URL}/lighting` },
+        "induction_240v": { name: "240V Induction Cooktop", dailyAh: 160, instantAmps: 177.0, price: 70, requiresInverter: true, url: "https://www.kmart.com.au/" }
       }
     };
 
@@ -178,7 +218,7 @@
         const item = PRODUCTS.loads[key];
         const label = document.createElement('label');
         label.className = 'checkbox-label';
-        label.innerHTML = `<input type="checkbox" value="${key}" class="load-check" ${key === 'kings_60l_fridge' ? 'checked' : ''}> ${item.name}`;
+        label.innerHTML = `<input type="checkbox" value="${key}" class="load-check" ${key === 'kings_stayzcool_60' ? 'checked' : ''}> ${item.name} ($${item.price})`;
         loadsContainer.appendChild(label);
       });
 
@@ -195,9 +235,22 @@
       Object.keys(obj).forEach(key => {
         const opt = document.createElement('option');
         opt.value = key;
-        opt.innerText = obj[key].name;
+        opt.innerText = `${obj[key].name} ($${obj[key].price || 0})`;
         select.appendChild(opt);
       });
+    }
+
+    function addShoppingItem(name, price, qty, url) {
+      if (price === 0) return 0;
+      const total = price * qty;
+      const li = document.createElement('li');
+      li.className = 'shopping-item';
+      li.innerHTML = `
+        <span><a href="${url}" target="_blank" class="shopping-link">${name}</a> ${qty > 1 ? `(x${qty})` : ''}</span>
+        <span class="shopping-price">$${total.toFixed(2)}</span>
+      `;
+      document.getElementById('shoppingList').appendChild(li);
+      return total;
     }
 
     function runSimulation() {
@@ -217,6 +270,7 @@
 
       const activeLoadKeys = Array.from(document.querySelectorAll('.load-check:checked')).map(cb => cb.value);
 
+      // Math
       const altAh = selectedCharger.amps * driveHours;
       const solarAmps = (selectedSolar.watts * 0.85) / 13.0;
       const solarAh = solarAmps * sunHours;
@@ -245,15 +299,14 @@
       const totalBmsLimit = selectedBattery.bms * batQty;
       const totalCapacityAh = selectedBattery.capacity * batQty;
 
+      // Update Diagnostics
       document.getElementById('valGen').innerText = `+${totalGenAh.toFixed(1)} Ah`;
       document.getElementById('valCons').innerText = `-${totalConsAh.toFixed(1)} Ah`;
-      
-      const balEl = document.getElementById('valBal');
-      balEl.innerText = `${netBalAh >= 0 ? '+' : ''}${netBalAh.toFixed(1)} Ah`;
+      document.getElementById('valBal').innerText = `${netBalAh >= 0 ? '+' : ''}${netBalAh.toFixed(1)} Ah`;
       document.getElementById('cardBal').className = `metric-card ${netBalAh >= 0 ? 'success' : 'danger'}`;
-
       document.getElementById('valPeak').innerText = `${peakDrawAmps.toFixed(1)} A`;
 
+      // Warnings
       const alertsContainer = document.getElementById('alertsContainer');
       alertsContainer.innerHTML = '';
       const alerts = [];
@@ -287,6 +340,25 @@
         div.innerText = a.msg;
         alertsContainer.appendChild(div);
       });
+
+      // Render Shopping List & Calculate Total
+      document.getElementById('shoppingList').innerHTML = ''; // Clear list
+      let totalCost = 0;
+      
+      totalCost += addShoppingItem(selectedBattery.name, selectedBattery.price, batQty, selectedBattery.url);
+      totalCost += addShoppingItem(selectedCharger.name, selectedCharger.price, 1, selectedCharger.url);
+      totalCost += addShoppingItem(selectedSolar.name, selectedSolar.price, 1, selectedSolar.url);
+      totalCost += addShoppingItem(selectedInverter.name, selectedInverter.price, 1, selectedInverter.url);
+
+      activeLoadKeys.forEach(key => {
+        const item = PRODUCTS.loads[key];
+        totalCost += addShoppingItem(item.name, item.price, 1, item.url);
+      });
+
+      // Factor in roughly $250 for wiring, fuses, and busbars
+      totalCost += addShoppingItem("Wiring, Busbars & Fuses (Est.)", 250, 1, "#");
+
+      document.getElementById('valTotalCost').innerText = `$${totalCost.toFixed(2)}`;
     }
 
     window.onload = initUI;
