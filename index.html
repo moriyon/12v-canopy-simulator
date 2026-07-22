@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4WD 12V Canopy Electrical Simulator</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --accent: #ff9800;
+      --text: #e0e0e0;
+      --border: #333;
+      --danger: #f44336;
+      --warning: #ffb74d;
+      --success: #4caf50;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2, h3 { color: #fff; margin-top: 0; }
+    .header { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .header p { color: #aaa; margin: 5px 0 0 0; }
+    
+    .grid { display: grid; grid-template-columns: 360px 1fr; gap: 20px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+    
+    .field { margin-bottom: 15px; }
+    label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 5px; font-weight: 600; }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      background: #2a2a2a;
+      border: 1px solid var(--border);
+      color: #fff;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-label { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; cursor: pointer; color: #ccc; }
+    .checkbox-label input { width: auto; }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .metric-card {
+      background: #262626;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid var(--accent);
+    }
+    .metric-card.danger { border-left-color: var(--danger); }
+    .metric-card.success { border-left-color: var(--success); }
+    .metric-title { font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+    .metric-value { font-size: 1.3rem; font-weight: bold; color: #fff; }
+
+    .alert { padding: 12px 15px; border-radius: 6px; margin-bottom: 10px; font-size: 0.9rem; font-weight: 500; }
+    .alert.danger { background: #3b1414; color: #ff8a80; border: 1px solid #7f1d1d; }
+    .alert.warning { background: #38280e; color: #ffd54f; border: 1px solid #7c5208; }
+    .alert.success { background: #132e18; color: #81c784; border: 1px solid #1b5e20; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>⚡ 4WD Canopy 12V System Simulator</h1>
+    <p>Test real components from Adventure Kings, KickAss, and Anaconda to verify battery compatibility, BMS limits, and daily power balance.</p>
+  </div>
+
+  <div class="grid">
+    <div class="controls-col">
+      <div class="card">
+        <h3>1. Power Storage & Charging</h3>
+        <div class="field"><label>Auxiliary Battery Bank:</label><select id="batterySelect"></select></div>
+        <div class="field"><label>Battery Quantity (Parallel):</label><input type="number" id="batteryQty" value="1" min="1" max="4"></div>
+        <div class="field"><label>DC-DC Charger:</label><select id="chargerSelect"></select></div>
+        <div class="field"><label>Daily Driving Hours:</label><input type="number" id="drivingHours" value="2" min="0" max="12" step="0.5"></div>
+        <div class="field"><label>Solar Array:</label><select id="solarSelect"></select></div>
+        <div class="field"><label>Peak Sun Hours/Day:</label><input type="number" id="sunHours" value="4.5" min="0" max="10" step="0.5"></div>
+      </div>
+
+      <div class="card">
+        <h3>2. Inverter & Wiring</h3>
+        <div class="field"><label>AC Pure Sine Wave Inverter:</label><select id="inverterSelect"></select></div>
+        <div class="field">
+          <label>Inverter Main Cable Size:</label>
+          <select id="cableSelect">
+            <option value="4_BS">4 B&S (21.2mm²) - Max 120A</option>
+            <option value="2_BS">2 B&S (33.6mm²) - Max 180A</option>
+            <option value="0_BS" selected>0 B&S (49.5mm²) - Max 245A</option>
+            <option value="00_BS">00 B&S (67.4mm²) - Max 290A</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3. Connected Appliances</h3>
+        <div id="loadsContainer" class="checkbox-group"></div>
+      </div>
+    </div>
+
+    <div class="results-col">
+      <div class="card">
+        <h2>System Diagnostics & Balance</h2>
+        <div class="metrics-grid">
+          <div class="metric-card" id="cardGen"><div class="metric-title">Daily Generation</div><div class="metric-value" id="valGen">0 Ah</div></div>
+          <div class="metric-card" id="cardCons"><div class="metric-title">Daily Consumption</div><div class="metric-value" id="valCons">0 Ah</div></div>
+          <div class="metric-card" id="cardBal"><div class="metric-title">Net Daily Balance</div><div class="metric-value" id="valBal">0 Ah</div></div>
+          <div class="metric-card" id="cardPeak"><div class="metric-title">Peak Instant Draw</div><div class="metric-value" id="valPeak">0 A</div></div>
+        </div>
+
+        <h3>Safety Checks & Warnings</h3>
+        <div id="alertsContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PRODUCTS = {
+      batteries: {
+        "kings_100ah_lithium": { name: "Kings 100Ah Lithium (100A BMS)", capacity: 100, bms: 100, chemistry: "LiFePO4" },
+        "kickass_120ah_lithium": { name: "KickAss 120Ah Smart Lithium (120A BMS)", capacity: 120, bms: 120, chemistry: "LiFePO4" },
+        "kickass_200ah_lithium": { name: "KickAss 200Ah Smart Lithium (200A BMS)", capacity: 200, bms: 200, chemistry: "LiFePO4" },
+        "dune_100ah_agm": { name: "Dune 4WD 100Ah AGM (Anaconda)", capacity: 100, bms: 80, chemistry: "AGM" }
+      },
+      chargers: {
+        "none": { name: "None / Solar Only", amps: 0 },
+        "kings_25a": { name: "Kings 25A DCDC Charger", amps: 25 },
+        "kickass_40a": { name: "KickAss 40A Smart DCDC Charger", amps: 40 }
+      },
+      solar: {
+        "none": { name: "None", watts: 0 },
+        "kings_200w": { name: "Kings 200W Fixed Panel", watts: 200 },
+        "kings_300w": { name: "Kings 300W Tri-Fold Blanket", watts: 300 },
+        "kickass_350w": { name: "KickAss 350W Fixed Panel", watts: 350 }
+      },
+      inverters: {
+        "none": { name: "None (12V DC Only)", watts: 0 },
+        "kings_1500w": { name: "Kings 1500W Pure Sine Wave", watts: 1500 },
+        "kickass_2000w": { name: "KickAss 2000W Pure Sine Wave", watts: 2000 },
+        "kickass_3000w": { name: "KickAss 3000W Pure Sine Wave", watts: 3000 }
+      },
+      loads: {
+        "kings_60l_fridge": { name: "Kings 60L Stayzcool Fridge (36Ah/day)", dailyAh: 36, instantAmps: 3.8 },
+        "dometic_cfx3_75": { name: "Dometic CFX3 75DZ Fridge (42Ah/day)", dailyAh: 42, instantAmps: 4.5 },
+        "starlink_mini": { name: "Starlink Mini 12V (70Ah/day)", dailyAh: 70, instantAmps: 2.9 },
+        "travel_buddy": { name: "Travel Buddy 12V Oven (10Ah/hr use)", dailyAh: 10, instantAmps: 10.0 },
+        "induction_240v": { name: "240V Induction Cooktop via Inverter (160Ah/hr)", dailyAh: 160, instantAmps: 177.0, requiresInverter: true }
+      }
+    };
+
+    const CABLE_LIMITS = { "4_BS": 120, "2_BS": 180, "0_BS": 245, "00_BS": 290 };
+
+    function initUI() {
+      populateSelect('batterySelect', PRODUCTS.batteries);
+      populateSelect('chargerSelect', PRODUCTS.chargers);
+      populateSelect('solarSelect', PRODUCTS.solar);
+      populateSelect('inverterSelect', PRODUCTS.inverters);
+
+      const loadsContainer = document.getElementById('loadsContainer');
+      Object.keys(PRODUCTS.loads).forEach(key => {
+        const item = PRODUCTS.loads[key];
+        const label = document.createElement('label');
+        label.className = 'checkbox-label';
+        label.innerHTML = `<input type="checkbox" value="${key}" class="load-check" ${key === 'kings_60l_fridge' ? 'checked' : ''}> ${item.name}`;
+        loadsContainer.appendChild(label);
+      });
+
+      document.querySelectorAll('select, input').forEach(el => {
+        el.addEventListener('change', runSimulation);
+        el.addEventListener('input', runSimulation);
+      });
+
+      runSimulation();
+    }
+
+    function populateSelect(id, obj) {
+      const select = document.getElementById(id);
+      Object.keys(obj).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.innerText = obj[key].name;
+        select.appendChild(opt);
+      });
+    }
+
+    function runSimulation() {
+      const batKey = document.getElementById('batterySelect').value;
+      const batQty = parseInt(document.getElementById('batteryQty').value) || 1;
+      const chargerKey = document.getElementById('chargerSelect').value;
+      const driveHours = parseFloat(document.getElementById('drivingHours').value) || 0;
+      const solarKey = document.getElementById('solarSelect').value;
+      const sunHours = parseFloat(document.getElementById('sunHours').value) || 0;
+      const inverterKey = document.getElementById('inverterSelect').value;
+      const cableKey = document.getElementById('cableSelect').value;
+
+      const selectedBattery = PRODUCTS.batteries[batKey];
+      const selectedCharger = PRODUCTS.chargers[chargerKey];
+      const selectedSolar = PRODUCTS.solar[solarKey];
+      const selectedInverter = PRODUCTS.inverters[inverterKey];
+
+      const activeLoadKeys = Array.from(document.querySelectorAll('.load-check:checked')).map(cb => cb.value);
+
+      const altAh = selectedCharger.amps * driveHours;
+      const solarAmps = (selectedSolar.watts * 0.85) / 13.0;
+      const solarAh = solarAmps * sunHours;
+      const totalGenAh = altAh + solarAh;
+
+      let totalConsAh = 0;
+      let peakDrawAmps = 0;
+
+      activeLoadKeys.forEach(key => {
+        const item = PRODUCTS.loads[key];
+        totalConsAh += item.dailyAh;
+        if (!item.requiresInverter) peakDrawAmps += item.instantAmps;
+      });
+
+      let inverterDrawAmps = 0;
+      if (selectedInverter.watts > 0) {
+        if (activeLoadKeys.includes('induction_240v')) {
+          inverterDrawAmps = 177;
+        } else {
+          inverterDrawAmps = (selectedInverter.watts * 0.5) / (12.0 * 0.88);
+        }
+        peakDrawAmps = Math.max(peakDrawAmps, inverterDrawAmps);
+      }
+
+      const netBalAh = totalGenAh - totalConsAh;
+      const totalBmsLimit = selectedBattery.bms * batQty;
+      const totalCapacityAh = selectedBattery.capacity * batQty;
+
+      document.getElementById('valGen').innerText = `+${totalGenAh.toFixed(1)} Ah`;
+      document.getElementById('valCons').innerText = `-${totalConsAh.toFixed(1)} Ah`;
+      
+      const balEl = document.getElementById('valBal');
+      balEl.innerText = `${netBalAh >= 0 ? '+' : ''}${netBalAh.toFixed(1)} Ah`;
+      document.getElementById('cardBal').className = `metric-card ${netBalAh >= 0 ? 'success' : 'danger'}`;
+
+      document.getElementById('valPeak').innerText = `${peakDrawAmps.toFixed(1)} A`;
+
+      const alertsContainer = document.getElementById('alertsContainer');
+      alertsContainer.innerHTML = '';
+      const alerts = [];
+
+      if (peakDrawAmps > totalBmsLimit) {
+        alerts.push({ type: 'danger', msg: `🚨 BMS TRIP RISK: Instant draw (${peakDrawAmps.toFixed(1)}A) exceeds battery BMS cutoff (${totalBmsLimit}A).` });
+      }
+
+      const maxCableAmps = CABLE_LIMITS[cableKey];
+      if (inverterDrawAmps > maxCableAmps) {
+        alerts.push({ type: 'danger', msg: `🔥 FIRE RISK: Inverter draw (${inverterDrawAmps.toFixed(1)}A) exceeds cable capacity (${maxCableAmps}A for ${cableKey}).` });
+      }
+
+      if (activeLoadKeys.includes('induction_240v') && selectedInverter.watts < 2000) {
+        alerts.push({ type: 'warning', msg: `⚠️ INVERTER TOO SMALL: Induction cooktop requires a 2000W+ Inverter.` });
+      }
+
+      if (netBalAh < 0) {
+        const usableAh = selectedBattery.chemistry === 'LiFePO4' ? totalCapacityAh * 0.90 : totalCapacityAh * 0.50;
+        const daysToFlat = (usableAh / Math.abs(netBalAh)).toFixed(1);
+        alerts.push({ type: 'warning', msg: `⚠️ POWER DEFICIT: Battery reaches cutoff in ~${daysToFlat} days.` });
+      }
+
+      if (alerts.length === 0) {
+        alerts.push({ type: 'success', msg: `✅ System Healthy: Power balance is positive and total draw is within safe wire/BMS limits!` });
+      }
+
+      alerts.forEach(a => {
+        const div = document.createElement('div');
+        div.className = `alert ${a.type}`;
+        div.innerText = a.msg;
+        alertsContainer.appendChild(div);
+      });
+    }
+
+    window.onload = initUI;
+  </script>
+</body>
+</html>
