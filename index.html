@@ -161,50 +161,134 @@
     const ANACONDA_URL = "https://www.anacondastores.com/camping-tents/power-cooling";
 
     const PRODUCTS = {
+      // ==========================================
+      // 1. BATTERIES (AUXILIARY STORAGE)
+      // ==========================================
       batteries: {
+        // Adventure Kings
+        "kings_115ah_agm": { name: "Kings 115Ah AGM Deep Cycle", capacity: 115, bms: 100, chemistry: "AGM", price: 239, url: `${KINGS_URL}/batteries` },
         "kings_100ah_lithium": { name: "Kings 100Ah Lithium", capacity: 100, bms: 100, chemistry: "LiFePO4", price: 399, url: `${KINGS_URL}/batteries` },
         "kings_120ah_lithium": { name: "Kings 120Ah Deep Cycle Lithium", capacity: 120, bms: 100, chemistry: "LiFePO4", price: 499, url: `${KINGS_URL}/batteries` },
+        "kings_135ah_slim": { name: "Kings 135Ah Slimline Lithium", capacity: 135, bms: 100, chemistry: "LiFePO4", price: 599, url: `${KINGS_URL}/batteries` },
         "kings_200ah_lithium": { name: "Kings 200Ah Deep Cycle Lithium", capacity: 200, bms: 150, chemistry: "LiFePO4", price: 799, url: `${KINGS_URL}/batteries` },
+        
+        // KickAss Products
+        "kickass_120ah_agm": { name: "KickAss 120Ah AGM Deep Cycle", capacity: 120, bms: 100, chemistry: "AGM", price: 349, url: `${KICKASS_URL}/agm-batteries` },
         "kickass_105ah_slim": { name: "KickAss 105Ah Slimline Lithium", capacity: 105, bms: 100, chemistry: "LiFePO4", price: 649, url: `${KICKASS_URL}/lithium-batteries` },
         "kickass_120ah_lithium": { name: "KickAss 120Ah Smart Lithium", capacity: 120, bms: 120, chemistry: "LiFePO4", price: 599, url: `${KICKASS_URL}/lithium-batteries` },
+        "kickass_170ah_slim": { name: "KickAss 170Ah Slimline Lithium", capacity: 170, bms: 150, chemistry: "LiFePO4", price: 899, url: `${KICKASS_URL}/lithium-batteries` },
         "kickass_200ah_lithium": { name: "KickAss 200Ah Smart Lithium", capacity: 200, bms: 200, chemistry: "LiFePO4", price: 1099, url: `${KICKASS_URL}/lithium-batteries` },
         "kickass_230ah_ultra": { name: "KickAss 230Ah Ultra-X Slimline", capacity: 230, bms: 200, chemistry: "LiFePO4", price: 1399, url: `${KICKASS_URL}/lithium-batteries` },
-        "dune_100ah_agm": { name: "Dune 4WD 100Ah AGM (Anaconda)", capacity: 100, bms: 80, chemistry: "AGM", price: 199, url: `${ANACONDA_URL}/batteries` }
+        "kickass_300ah_lithium": { name: "KickAss 300Ah Massive Lithium", capacity: 300, bms: 250, chemistry: "LiFePO4", price: 1799, url: `${KICKASS_URL}/lithium-batteries` },
+        
+        // Anaconda (Dune / Hard Korr)
+        "dune_100ah_agm": { name: "Dune 4WD 100Ah AGM", capacity: 100, bms: 80, chemistry: "AGM", price: 199, url: `${ANACONDA_URL}/batteries` },
+        "hardkorr_100ah_lith": { name: "Hard Korr 100Ah Lithium", capacity: 100, bms: 100, chemistry: "LiFePO4", price: 699, url: `${ANACONDA_URL}/batteries` },
+        "hardkorr_200ah_lith": { name: "Hard Korr 200Ah Lithium", capacity: 200, bms: 150, chemistry: "LiFePO4", price: 1199, url: `${ANACONDA_URL}/batteries` }
       },
+
+      // ==========================================
+      // 2. CHARGERS (DCDC & ALTERNATOR)
+      // ==========================================
       chargers: {
         "none": { name: "None / Solar Only", amps: 0, price: 0, url: "#" },
-        "kings_25a": { name: "Kings 25A DCDC Charger", amps: 25, price: 262, url: `${KINGS_URL}/battery-chargers` },
-        "kings_40a": { name: "Kings 40A DCDC Charger", amps: 40, price: 288, url: `${KINGS_URL}/battery-chargers` },
-        "kickass_25a": { name: "KickAss 25A Smart DCDC", amps: 25, price: 149, url: `${KICKASS_URL}/dc-dc-chargers` },
-        "kickass_40a": { name: "KickAss 40A Smart DCDC", amps: 40, price: 249, url: `${KICKASS_URL}/dc-dc-chargers` },
-        "kickass_50a_flex": { name: "KickAss 50A Flexicharge", amps: 50, price: 349, url: `${KICKASS_URL}/dc-dc-chargers` }
+        // Kings
+        "kings_25a": { name: "Kings 25A DCDC Charger (with MPPT)", amps: 25, price: 262, url: `${KINGS_URL}/battery-chargers` },
+        "kings_40a": { name: "Kings 40A DCDC Charger (with MPPT)", amps: 40, price: 288, url: `${KINGS_URL}/battery-chargers` },
+        
+        // KickAss
+        "kickass_25a": { name: "KickAss 25A Smart DCDC (Bluetooth)", amps: 25, price: 149, url: `${KICKASS_URL}/dc-dc-chargers` },
+        "kickass_40a": { name: "KickAss 40A Smart DCDC (Bluetooth)", amps: 40, price: 249, url: `${KICKASS_URL}/dc-dc-chargers` },
+        "kickass_50a_flex": { name: "KickAss 50A Flexicharge AC/DC", amps: 50, price: 349, url: `${KICKASS_URL}/dc-dc-chargers` },
+        
+        // Anaconda (Projecta / Hard Korr)
+        "projecta_idc25": { name: "Projecta IDC25 25A DCDC", amps: 25, price: 349, url: `${ANACONDA_URL}` },
+        "hardkorr_40a": { name: "Hard Korr 40A DCDC with MPPT", amps: 40, price: 299, url: `${ANACONDA_URL}` }
       },
+
+      // ==========================================
+      // 3. SOLAR PANELS & BLANKETS
+      // ==========================================
       solar: {
         "none": { name: "None", watts: 0, price: 0, url: "#" },
+        // Kings
+        "kings_110w_fixed": { name: "Kings 110W Fixed Panel", watts: 110, price: 69, url: `${KINGS_URL}/solar` },
         "kings_200w_fixed": { name: "Kings 200W Fixed Panel", watts: 200, price: 86, url: `${KINGS_URL}/solar` },
+        "kings_200w_blanket": { name: "Kings 200W Solar Blanket", watts: 200, price: 169, url: `${KINGS_URL}/solar` },
         "kings_300w_fold": { name: "Kings 300W Tri-Fold Blanket", watts: 300, price: 219, url: `${KINGS_URL}/solar` },
-        "kickass_200w_fold": { name: "KickAss 200W Portable Blanket", watts: 200, price: 250, url: `${KICKASS_URL}/solar-panels` },
-        "kickass_350w_fixed": { name: "KickAss 350W Fixed Panel", watts: 350, price: 299, url: `${KICKASS_URL}/solar-panels` }
+        
+        // KickAss
+        "kickass_150w_blanket": { name: "KickAss 150W Portable Blanket", watts: 150, price: 199, url: `${KICKASS_URL}/solar-panels` },
+        "kickass_200w_blanket": { name: "KickAss 200W Portable Blanket", watts: 200, price: 250, url: `${KICKASS_URL}/solar-panels` },
+        "kickass_300w_blanket": { name: "KickAss 300W Premium Blanket", watts: 300, price: 349, url: `${KICKASS_URL}/solar-panels` },
+        "kickass_350w_fixed": { name: "KickAss 350W Fixed Panel", watts: 350, price: 299, url: `${KICKASS_URL}/solar-panels` },
+        
+        // Anaconda (Hard Korr / Dune)
+        "dune_160w_fold": { name: "Dune 160W Folding Panel", watts: 160, price: 149, url: `${ANACONDA_URL}/solar` },
+        "hardkorr_200w_blanket": { name: "Hard Korr 200W Heavy Duty Blanket", watts: 200, price: 399, url: `${ANACONDA_URL}/solar` }
       },
+
+      // ==========================================
+      // 4. INVERTERS (12V DC TO 240V AC)
+      // ==========================================
       inverters: {
         "none": { name: "None (12V DC Only)", watts: 0, price: 0, url: "#" },
+        // Kings
         "kings_1500w": { name: "Kings 1500W Pure Sine Wave", watts: 1500, price: 150, url: `${KINGS_URL}/inverters` },
+        "kings_3000w": { name: "Kings 3000W Pure Sine Wave", watts: 3000, price: 250, url: `${KINGS_URL}/inverters` },
+        
+        // KickAss
+        "kickass_1000w": { name: "KickAss 1000W Pure Sine Wave", watts: 1000, price: 249, url: `${KICKASS_URL}/inverters` },
         "kickass_2000w": { name: "KickAss 2000W Pure Sine Wave", watts: 2000, price: 429, url: `${KICKASS_URL}/inverters` },
-        "kickass_3000w": { name: "KickAss 3000W Pure Sine Wave", watts: 3000, price: 699, url: `${KICKASS_URL}/inverters` }
+        "kickass_3000w": { name: "KickAss 3000W Pure Sine Wave", watts: 3000, price: 699, url: `${KICKASS_URL}/inverters` },
+        
+        // Anaconda (Projecta)
+        "projecta_1000w": { name: "Projecta 1000W Pro-Wave Inverter", watts: 1000, price: 399, url: `${ANACONDA_URL}` },
+        "projecta_2000w": { name: "Projecta 2000W Pro-Wave Inverter", watts: 2000, price: 699, url: `${ANACONDA_URL}` }
       },
+
+      // ==========================================
+      // 5. APPLIANCES, FRIDGES & LOADS
+      // ==========================================
       loads: {
+        // Adventure Kings Fridges & Gear
         "kings_escape_30": { name: "Kings Escape 30L Fridge", dailyAh: 25, instantAmps: 3.5, price: 199, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
         "kings_escape_40": { name: "Kings Escape 40L Fridge", dailyAh: 30, instantAmps: 3.8, price: 249, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
+        "kings_escape_50": { name: "Kings Escape 50L Fridge", dailyAh: 34, instantAmps: 3.8, price: 299, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
+        "kings_stayzcool_45": { name: "Kings 45L Stayzcool Fridge", dailyAh: 30, instantAmps: 3.8, price: 299, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
         "kings_stayzcool_60": { name: "Kings 60L Stayzcool Fridge", dailyAh: 36, instantAmps: 3.8, price: 349, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
+        "kings_stayzcool_75dz": { name: "Kings 75L Stayzcool Dual Zone", dailyAh: 44, instantAmps: 4.5, price: 449, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
+        "kings_stayzcool_85up": { name: "Kings 85L Stayzcool Upright Fridge", dailyAh: 42, instantAmps: 4.5, price: 499, url: "https://www.4wdsupacentre.com.au/products/fridges-coolers" },
+        "kings_travel_oven": { name: "Kings 12V Travel Oven", dailyAh: 10, instantAmps: 10.0, price: 129, url: `${KINGS_URL}` },
+        "kings_control_box": { name: "Kings 12V Control Box", dailyAh: 1, instantAmps: 0.1, price: 129, url: `${KINGS_URL}/12v-power` },
+        "water_pump": { name: "Kings 12V Water Pump", dailyAh: 2, instantAmps: 4.0, price: 50, url: `${KINGS_URL}` },
+
+        // KickAss Fridges & Gear
+        "kickass_uni_45": { name: "KickAss 45L UniZone Fridge", dailyAh: 30, instantAmps: 3.8, price: 599, url: `${KICKASS_URL}/fridges` },
+        "kickass_uni_65": { name: "KickAss 65L UniZone Fridge", dailyAh: 36, instantAmps: 4.5, price: 749, url: `${KICKASS_URL}/fridges` },
+        "kickass_dz_75": { name: "KickAss 75L Dual Zone Fridge", dailyAh: 44, instantAmps: 5.0, price: 899, url: `${KICKASS_URL}/fridges` },
+        "kickass_dz_95": { name: "KickAss 95L Dual Zone Fridge", dailyAh: 52, instantAmps: 5.5, price: 999, url: `${KICKASS_URL}/fridges` },
+        "travel_buddy": { name: "Travel Buddy 12V Marine Oven", dailyAh: 10, instantAmps: 10.0, price: 300, url: `${KICKASS_URL}/12v-travel-ovens` },
+        "kickass_travel_oven": { name: "KickAss 12V Travel Oven", dailyAh: 10, instantAmps: 10.0, price: 249, url: `${KICKASS_URL}/12v-travel-ovens` },
+        "kickass_control_hub": { name: "KickAss Plus DCDC Control Hub", dailyAh: 2, instantAmps: 0.2, price: 549, url: `${KICKASS_URL}/12v-control-hubs` },
+
+        // Anaconda (Dometic / Companion / Dune)
+        "dune_45l_fridge": { name: "Dune 4WD 45L Fridge/Freezer", dailyAh: 30, instantAmps: 3.8, price: 399, url: `${ANACONDA_URL}/fridges-coolers` },
+        "companion_60l": { name: "Companion 60L Single Zone", dailyAh: 38, instantAmps: 4.0, price: 699, url: `${ANACONDA_URL}/fridges-coolers` },
         "dometic_cfx3_35": { name: "Dometic CFX3 35L Fridge", dailyAh: 29, instantAmps: 3.5, price: 1099, url: `${ANACONDA_URL}/fridges-coolers` },
+        "dometic_cfx3_45": { name: "Dometic CFX3 45L Fridge", dailyAh: 32, instantAmps: 3.8, price: 1199, url: `${ANACONDA_URL}/fridges-coolers` },
+        "dometic_cfx3_55": { name: "Dometic CFX3 55L Fridge", dailyAh: 38, instantAmps: 4.2, price: 1299, url: `${ANACONDA_URL}/fridges-coolers` },
         "dometic_cfx3_75": { name: "Dometic CFX3 75DZ Dual Zone", dailyAh: 42, instantAmps: 4.5, price: 1699, url: `${ANACONDA_URL}/fridges-coolers` },
+        "dometic_cfx3_95": { name: "Dometic CFX3 95DZ Dual Zone", dailyAh: 48, instantAmps: 5.0, price: 1899, url: `${ANACONDA_URL}/fridges-coolers` },
+        "dometic_cfx3_100": { name: "Dometic CFX3 100L Single Zone", dailyAh: 50, instantAmps: 5.5, price: 1999, url: `${ANACONDA_URL}/fridges-coolers` },
+
+        // External/Misc High-Draw Loads
         "starlink_mini": { name: "Starlink Mini (12V Converted)", dailyAh: 70, instantAmps: 2.9, price: 599, url: "https://www.starlink.com/roam" },
-        "travel_buddy": { name: "Travel Buddy 12V Oven", dailyAh: 10, instantAmps: 10.0, price: 300, url: `${KICKASS_URL}/12v-travel-ovens` },
-        "camp_lighting": { name: "Camp LED Lighting", dailyAh: 8, instantAmps: 2.0, price: 50, url: `${KINGS_URL}/lighting` },
-        "induction_240v": { name: "240V Induction Cooktop", dailyAh: 160, instantAmps: 177.0, price: 70, requiresInverter: true, url: "https://www.kmart.com.au/" }
+        "camp_lighting": { name: "Hard Korr LED Light Bars (4hrs)", dailyAh: 8, instantAmps: 2.0, price: 120, url: `${ANACONDA_URL}/lighting` },
+        "induction_240v": { name: "240V Induction Cooktop (1hr/day)", dailyAh: 160, instantAmps: 177.0, price: 70, requiresInverter: true, url: "https://www.kmart.com.au/" },
+        "coffee_machine": { name: "240V Espresso Machine (15 mins/day)", dailyAh: 40, instantAmps: 140.0, price: 150, requiresInverter: true, url: "#" }
       }
     };
-
     const CABLE_LIMITS = { "4_BS": 120, "2_BS": 180, "0_BS": 245, "00_BS": 290 };
 
     function initUI() {
