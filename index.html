@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ultimate 4WD 12V Canopy Simulator & Budget</title>
+  <title>Ultimate 4WD Canopy 12V Simulator & Budget</title>
   <style>
     :root {
       --bg-color: #121212; --card-bg: #1e1e1e; --accent: #ff9800;
@@ -143,9 +143,9 @@
         "kickass_230ah_ultra": { name: "KickAss 230Ah Ultra-X Slimline", capacity: 230, bms: 200, chemistry: "LiFePO4", price: 1399, url: `${KICKASS_URL}/lithium-batteries` },
         "kickass_300ah_lithium": { name: "KickAss 300Ah Massive Lithium", capacity: 300, bms: 250, chemistry: "LiFePO4", price: 1799, url: `${KICKASS_URL}/lithium-batteries` },
         
-        "dune_100ah_agm": { name: "Dune 4WD 100Ah AGM", capacity: 100, bms: 80, chemistry: "AGM", price: 199, url: `${ANACONDA_URL}/batteries` },
-        "hardkorr_100ah_lith": { name: "Hard Korr 100Ah Lithium", capacity: 100, bms: 100, chemistry: "LiFePO4", price: 699, url: `${ANACONDA_URL}/batteries` },
-        "hardkorr_200ah_lith": { name: "Hard Korr 200Ah Lithium", capacity: 200, bms: 150, chemistry: "LiFePO4", price: 1199, url: `${ANACONDA_URL}/batteries` }
+        "dune_100ah_agm": { name: "Dune 4WD 100Ah AGM", capacity: 100, bms: 80, chemistry: "AGM", price: 199, url: `${ANACONDA_URL}/camping-tents/power-cooling/batteries` },
+        "hardkorr_100ah_lith": { name: "Hard Korr 100Ah Lithium", capacity: 100, bms: 100, chemistry: "LiFePO4", price: 699, url: `${ANACONDA_URL}/camping-tents/power-cooling/batteries` },
+        "hardkorr_200ah_lith": { name: "Hard Korr 200Ah Lithium", capacity: 200, bms: 150, chemistry: "LiFePO4", price: 1199, url: `${ANACONDA_URL}/camping-tents/power-cooling/batteries` }
       },
       chargers: {
         "none": { name: "None / Solar Only", amps: 0, price: 0, url: "#" },
@@ -164,7 +164,7 @@
         "kings_300w_fold": { name: "Kings 300W Tri-Fold Blanket", watts: 300, price: 219, url: `${KINGS_URL}/solar` },
         "kickass_200w_blanket": { name: "KickAss 200W Portable Blanket", watts: 200, price: 250, url: `${KICKASS_URL}/solar-panels` },
         "kickass_350w_fixed": { name: "KickAss 350W Fixed Panel", watts: 350, price: 299, url: `${KICKASS_URL}/solar-panels` },
-        "hardkorr_200w_blanket": { name: "Hard Korr 200W Heavy Duty Blanket", watts: 200, price: 399, url: `${ANACONDA_URL}/solar` }
+        "hardkorr_200w_blanket": { name: "Hard Korr 200W Heavy Duty Blanket", watts: 200, price: 399, url: `${ANACONDA_URL}/camping-tents/power-cooling/solar` }
       },
       inverters: {
         "none": { name: "None (12V DC Only)", watts: 0, price: 0, url: "#" },
@@ -175,20 +175,32 @@
         "kickass_3000w": { name: "KickAss 3000W Pure Sine Wave", watts: 3000, price: 699, url: `${KICKASS_URL}/inverters` }
       },
       loads: {
-        // AWNINGS (No daily power draw, but adds to budget)
+        // AWNINGS & SHELTERS (Adds to budget, no power draw)
+        "kings_2x25_awning": { category: "Awnings & Tents", name: "Kings 2x2.5m Side Awning", dailyAh: 0, instantAmps: 0, price: 129, url: `${KINGS_URL}/awnings` },
+        "kings_25x25_awning": { category: "Awnings & Tents", name: "Kings 2.5x2.5m Side Awning", dailyAh: 0, instantAmps: 0, price: 149, url: `${KINGS_URL}/awnings` },
+        "kings_180_awning": { category: "Awnings & Tents", name: "Kings 180° Free-Standing Awning", dailyAh: 0, instantAmps: 0, price: 399, url: `${KINGS_URL}/awnings` },
         "kings_270_awning": { category: "Awnings & Tents", name: "Kings 270° Free-Standing Awning", dailyAh: 0, instantAmps: 0, price: 549, url: `${KINGS_URL}/awnings` },
-        "kings_2x2_awning": { category: "Awnings & Tents", name: "Kings 2x2.5m Standard Awning", dailyAh: 0, instantAmps: 0, price: 129, url: `${KINGS_URL}/awnings` },
-        "kickass_shower_tent": { category: "Awnings & Tents", name: "KickAss Shower Tent Awning", dailyAh: 0, instantAmps: 0, price: 199, url: `${KICKASS_URL}/awnings` },
+        "kings_shower_tent": { category: "Awnings & Tents", name: "Kings Ensuite/Shower Tent", dailyAh: 0, instantAmps: 0, price: 119, url: `${KINGS_URL}/awnings` },
+        
+        "kickass_2x25_awning": { category: "Awnings & Tents", name: "KickAss 2x2.5m Side Awning", dailyAh: 0, instantAmps: 0, price: 249, url: `${KICKASS_URL}/awnings` },
+        "kickass_25x25_awning": { category: "Awnings & Tents", name: "KickAss 2.5x2.5m Side Awning", dailyAh: 0, instantAmps: 0, price: 279, url: `${KICKASS_URL}/awnings` },
+        "kickass_270_awning": { category: "Awnings & Tents", name: "KickAss 270° Free-Standing Awning", dailyAh: 0, instantAmps: 0, price: 899, url: `${KICKASS_URL}/awnings` },
+        "kickass_shower_tent": { category: "Awnings & Tents", name: "KickAss Premium Shower Tent", dailyAh: 0, instantAmps: 0, price: 199, url: `${KICKASS_URL}/awnings` },
+        
+        "dune_2x2_awning": { category: "Awnings & Tents", name: "Dune 4WD 2x2m Awning", dailyAh: 0, instantAmps: 0, price: 149, url: `${ANACONDA_URL}/camping-tents/gazebos-screens-shades/awnings` },
+        "dune_270_awning": { category: "Awnings & Tents", name: "Dune 4WD 270° Ultimate Awning", dailyAh: 0, instantAmps: 0, price: 699, url: `${ANACONDA_URL}/camping-tents/gazebos-screens-shades/awnings` },
 
         // FRIDGES
         "kings_stayzcool_60": { category: "Fridges", name: "Kings 60L Stayzcool Fridge", dailyAh: 36, instantAmps: 3.8, price: 349, url: `${KINGS_URL}/fridges-coolers` },
         "kings_stayzcool_85up": { category: "Fridges", name: "Kings 85L Upright Fridge", dailyAh: 42, instantAmps: 4.5, price: 499, url: `${KINGS_URL}/fridges-coolers` },
         "kickass_dz_75": { category: "Fridges", name: "KickAss 75L Dual Zone Fridge", dailyAh: 44, instantAmps: 5.0, price: 899, url: `${KICKASS_URL}/fridges` },
-        "dometic_cfx3_75": { category: "Fridges", name: "Dometic CFX3 75DZ Dual Zone", dailyAh: 42, instantAmps: 4.5, price: 1699, url: `${ANACONDA_URL}/fridges-coolers` },
+        "dometic_cfx3_75": { category: "Fridges", name: "Dometic CFX3 75DZ Dual Zone", dailyAh: 42, instantAmps: 4.5, price: 1699, url: `${ANACONDA_URL}/camping-tents/power-cooling/fridges-coolers` },
 
         // LIGHTING & COMFORTS
         "kings_heated_blanket": { category: "Comfort & Lighting", name: "Kings 12V Heated Blanket (8hrs)", dailyAh: 32, instantAmps: 4.0, price: 69, url: `${KINGS_URL}/camping` },
-        "kings_illuminator_awning": { category: "Comfort & Lighting", name: "Kings Illuminator Awning Light Strip", dailyAh: 4, instantAmps: 1.0, price: 39, url: `${KINGS_URL}/lighting` },
+        "kickass_heated_blanket": { category: "Comfort & Lighting", name: "KickAss 12V Heated Travel Blanket (8hrs)", dailyAh: 32, instantAmps: 4.0, price: 89, url: `${KICKASS_URL}/12v-travel-accessories` },
+        "kings_illuminator_awning": { category: "Comfort & Lighting", name: "Kings Illuminator Awning Light Strip (4hrs)", dailyAh: 4, instantAmps: 1.0, price: 39, url: `${KINGS_URL}/lighting` },
+        "kickass_awning_light": { category: "Comfort & Lighting", name: "KickAss Dual Colour Awning Light Kit (4hrs)", dailyAh: 6, instantAmps: 1.5, price: 89, url: `${KICKASS_URL}/lighting` },
         "hardkorr_camp_light": { category: "Comfort & Lighting", name: "Hard Korr 4-Bar LED Camp Kit (4hrs)", dailyAh: 8, instantAmps: 2.0, price: 149, url: `${ANACONDA_URL}/lighting` },
         "starlink_mini": { category: "Comfort & Lighting", name: "Starlink Mini (12V Converted)", dailyAh: 70, instantAmps: 2.9, price: 599, url: "https://www.starlink.com" },
 
